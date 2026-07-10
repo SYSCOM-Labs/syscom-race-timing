@@ -1,0 +1,25 @@
+-- Tabla de Autos Competidores
+CREATE TABLE IF NOT EXISTS autos (
+    id TEXT PRIMARY KEY,
+    matricula TEXT NOT NULL,
+    equipo TEXT NOT NULL
+);
+
+-- Registro de Vueltas (Carrera de 4 Horas)
+CREATE TABLE IF NOT EXISTS registro_vueltas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    auto_id TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tiempo_vuelta TEXT, -- Almacena el formato MM:SS.mm
+    FOREIGN KEY(auto_id) REFERENCES autos(id)
+);
+
+-- Registro de Pruebas Técnicas (Velocidad y Frenado)
+CREATE TABLE IF NOT EXISTS pruebas_tecnicas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    auto_id TEXT,
+    tipo_prueba TEXT, -- 'velocidad' o 'frenado'
+    valor REAL,       -- km/h o metros
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(auto_id) REFERENCES autos(id)
+);
