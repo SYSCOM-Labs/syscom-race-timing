@@ -4,6 +4,8 @@ import Sidebar from './components/Sidebar.jsx';
 import EnduranceView from './components/EnduranceView.jsx';
 import TechnicalView from './components/TechnicalView.jsx';
 import PilotsView from './components/PilotsView.jsx';
+import RecordsView from './components/RecordsView.jsx';
+import SeguridadView from './components/SeguridadView.jsx';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('endurance');
@@ -27,8 +29,12 @@ export default function App() {
       <main className="flex-1 p-5 overflow-hidden">
         <div className="w-full h-full rounded-3xl p-6 shadow-2xl overflow-y-auto"
              style={{ backgroundColor: '#eeeeee' }}>
-          {currentView === 'pilots' ? (
+          {currentView === 'seguridad' ? (
+            <SeguridadView themeMode={themeMode} />
+          ) : currentView === 'pilots' ? (
             <PilotsView themeMode={themeMode} />
+          ) : currentView === 'records' ? (
+            <RecordsView autos={autos} themeMode={themeMode} />
           ) : currentView === 'endurance' ? (
             <EnduranceView
               autos={autos}

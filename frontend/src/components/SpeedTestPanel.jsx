@@ -127,7 +127,7 @@ export default function SpeedTestPanel({ autos, themeMode }) {
             value={selectedId}
             onChange={e => setSelectedId(e.target.value)}
             disabled={phase !== 'idle'}
-            className="w-full max-w-xs px-3 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 disabled:opacity-40 transition-all"
+            className="w-full max-w-xs px-3 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 disabled:opacity-40 cursor-pointer transition-all"
             style={{ focusRing: `2px solid ${accent}` }}
           >
             <option value="">— Seleccionar —</option>
@@ -182,7 +182,7 @@ export default function SpeedTestPanel({ autos, themeMode }) {
             <button
               onClick={startCountdown}
               disabled={!selectedId}
-              className="px-8 py-3 rounded-xl text-white font-bold text-sm tracking-wider transition-all duration-200 disabled:opacity-30 shadow-sm"
+              className="px-8 py-3 rounded-xl text-white font-bold text-sm tracking-wider transition-all duration-200 disabled:opacity-30 shadow-sm cursor-pointer hover:scale-[1.02] hover:opacity-90 active:scale-98"
               style={{ backgroundColor: accent }}
             >
               Preparar
@@ -191,7 +191,7 @@ export default function SpeedTestPanel({ autos, themeMode }) {
           {phase === 'running' && (
             <button
               onClick={stopTimer}
-              className="px-8 py-3 rounded-xl text-white font-bold text-sm tracking-wider shadow-lg animate-pulse"
+              className="px-8 py-3 rounded-xl text-white font-bold text-sm tracking-wider shadow-lg animate-pulse cursor-pointer hover:opacity-90 active:scale-98"
               style={{ backgroundColor: '#dc2626' }}
             >
               DETENER
@@ -201,14 +201,14 @@ export default function SpeedTestPanel({ autos, themeMode }) {
             <>
               <button
                 onClick={saveRecord}
-                className="px-8 py-3 rounded-xl text-white font-bold text-sm tracking-wider transition-all duration-200 shadow-sm"
+                className="px-8 py-3 rounded-xl text-white font-bold text-sm tracking-wider transition-all duration-200 shadow-sm cursor-pointer hover:scale-[1.02] hover:opacity-90 active:scale-98"
                 style={{ backgroundColor: accent }}
               >
                 Guardar Tiempo
               </button>
               <button
                 onClick={resetAll}
-                className="px-8 py-3 rounded-xl font-bold text-sm tracking-wider transition-all duration-200 border"
+                className="px-8 py-3 rounded-xl font-bold text-sm tracking-wider transition-all duration-200 border cursor-pointer hover:bg-gray-50 active:scale-98"
                 style={{ color: accent, borderColor: accent }}
               >
                 Nueva Prueba
@@ -222,7 +222,7 @@ export default function SpeedTestPanel({ autos, themeMode }) {
         <div className="flex items-center justify-between px-6 pt-5 pb-2">
           <p className="text-[10px] text-gray-400 uppercase tracking-wider">Historial de Pruebas (Velocidad)</p>
           {records.length > 0 && (
-            <button onClick={clearAllRecords} className="text-[10px] text-red-400 hover:text-red-600 uppercase tracking-wider font-medium">
+            <button onClick={clearAllRecords} className="text-[10px] text-red-400 hover:text-red-600 uppercase tracking-wider font-medium cursor-pointer transition-colors">
               Limpiar Todo
             </button>
           )}
