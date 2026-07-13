@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import {
   Zap, Flame, Sun, Trophy, Shield, Crosshair, Rocket, Wind, Star, Gem, Mountain, Waves,
   Car, Bike, Ship, Plane, Siren, Radar, Navigation, Compass, LocateFixed,
@@ -61,12 +61,48 @@ function getSortIcon(currentKey, targetKey, asc) {
   return asc ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />;
 }
 
+function HighlightText({ text, query }) {
+  if (!query || !query.trim()) return <span>{text}</span>;
+  const regex = new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+  const parts = text.split(regex);
+  return (
+    <span>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-200 text-yellow-950 font-bold px-0.5 rounded shadow-sm">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </span>
+  );
+}
+
 export default function RecordsView({ autos, themeMode }) {
   const accent = THEMES[themeMode].accent;
   const { pilots } = usePilots();
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState('vueltas');
   const [sortAsc, setSortAsc] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      } else if (e.key === '/' && document.activeElement !== searchInputRef.current) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const speedRecords = useMemo(() => loadFromStorage('syscom_records_velocidad'), []);
   const brakeRecords = useMemo(() => loadFromStorage('syscom_records_frenado'), []);
@@ -145,14 +181,34 @@ export default function RecordsView({ autos, themeMode }) {
     <div className="h-full flex flex-col gap-4">
       <div className="bg-card-white rounded-2xl p-5 shadow-sm border border-gray-100">
         <div className="flex items-center gap-4 flex-wrap">
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-[250px]">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
+              ref={searchInputRef}
               value={search}
               onChange={e => setSearch(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               placeholder="Buscar por nombre, matrícula o empresa..."
-              className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 focus:outline-none transition-all"
+              className="w-full pl-9 pr-12 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 focus:outline-none transition-all duration-200 focus:border-transparent focus:ring-2"
+              style={{
+                boxShadow: isFocused ? `0 0 0 2.5px ${accent}25` : 'none',
+                borderColor: isFocused ? accent : undefined
+              }}
             />
+            {search ? (
+              <button
+                onClick={() => { setSearch(''); searchInputRef.current?.focus(); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 cursor-pointer transition-colors"
+                title="Limpiar búsqueda"
+              >
+                &times;
+              </button>
+            ) : (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded font-mono select-none pointer-events-none transition-opacity duration-150">
+                /
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-400 uppercase tracking-wider mr-1">Ordenar:</span>
@@ -166,10 +222,11 @@ export default function RecordsView({ autos, themeMode }) {
                 <button
                   key={key}
                   onClick={() => toggleSort(key)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 transition-all duration-200 ${
+                    isActive ? 'text-white shadow-sm' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  }`}
                   style={{
                     backgroundColor: isActive ? accent : 'transparent',
-                    color: isActive ? 'white' : '#888',
                   }}
                 >
                   {label}
@@ -196,10 +253,34 @@ export default function RecordsView({ autos, themeMode }) {
                 <th className="text-left py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">Piloto</th>
                 <th className="text-left py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">Matrícula</th>
                 <th className="text-left py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">Empresa</th>
-                <th className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">Vueltas</th>
+                <th
+                  onClick={() => toggleSort('vueltas')}
+                  className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium cursor-pointer hover:bg-gray-50 transition-colors select-none"
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    Vueltas
+                    {sortKey === 'vueltas' && getSortIcon(sortKey, 'vueltas', sortAsc)}
+                  </div>
+                </th>
                 <th className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">Mejor Vuelta</th>
-                <th className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">T. Velocidad</th>
-                <th className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium">T. Frenado</th>
+                <th
+                  onClick={() => toggleSort('velocidad')}
+                  className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium cursor-pointer hover:bg-gray-50 transition-colors select-none"
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    T. Velocidad
+                    {sortKey === 'velocidad' && getSortIcon(sortKey, 'velocidad', sortAsc)}
+                  </div>
+                </th>
+                <th
+                  onClick={() => toggleSort('frenado')}
+                  className="text-center py-3 px-4 text-[10px] text-gray-400 uppercase tracking-wider font-medium cursor-pointer hover:bg-gray-50 transition-colors select-none"
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    T. Frenado
+                    {sortKey === 'frenado' && getSortIcon(sortKey, 'frenado', sortAsc)}
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -228,7 +309,9 @@ export default function RecordsView({ autos, themeMode }) {
                         >
                           {renderIcon(r.icono, 'w-4 h-4')}
                         </div>
-                        <span className="font-semibold text-gray-800 text-xs whitespace-nowrap">{r.piloto}</span>
+                        <span className="font-semibold text-gray-800 text-xs whitespace-nowrap">
+                          <HighlightText text={r.piloto} query={search} />
+                        </span>
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -236,10 +319,12 @@ export default function RecordsView({ autos, themeMode }) {
                         className="text-[10px] font-bold text-white px-2 py-0.5 rounded-md"
                         style={{ backgroundColor: r.color || accent }}
                       >
-                        {r.matricula}
+                        <HighlightText text={r.matricula} query={search} />
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">{r.empresa}</td>
+                    <td className="py-3 px-4 text-gray-500 text-xs">
+                      <HighlightText text={r.empresa} query={search} />
+                    </td>
                     <td className="py-3 px-4 text-center">
                       <span
                         className="font-black text-lg"

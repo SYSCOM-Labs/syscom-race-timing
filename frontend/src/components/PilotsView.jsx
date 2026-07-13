@@ -160,14 +160,14 @@ function PilotCard({ pilot, onEdit, onDelete }) {
       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
         <button
           onClick={() => onEdit(pilot)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/90 shadow-sm text-gray-400 hover:text-gray-600 hover:bg-white transition-all"
+          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/90 shadow-sm text-gray-400 hover:text-gray-700 hover:bg-white hover:scale-110 active:scale-90 cursor-pointer transition-all duration-150"
           title="Editar"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
         </button>
         <button
           onClick={() => onDelete(pilot.id)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/90 shadow-sm text-gray-400 hover:text-red-500 transition-all"
+          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/90 shadow-sm text-gray-400 hover:text-red-500 hover:bg-white hover:scale-110 active:scale-90 cursor-pointer transition-all duration-150"
           title="Eliminar"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
@@ -284,7 +284,7 @@ function ModalForm({ pilot, onSave, onCancel, accent }) {
                   key={c}
                   type="button"
                   onClick={() => setColor(c)}
-                  className="w-8 h-8 rounded-lg transition-all duration-200 hover:scale-110"
+                  className="w-8 h-8 rounded-lg transition-all duration-200 hover:scale-110 cursor-pointer"
                   style={{
                     backgroundColor: c,
                     outline: color === c ? `3px solid ${c}` : '3px solid transparent',
@@ -312,7 +312,7 @@ function ModalForm({ pilot, onSave, onCancel, accent }) {
                 <button
                   type="button"
                   onClick={() => { setIconTab('emoji'); if (isLucideIcon(icono)) setIcono(currentDefaultEmoji); }}
-                  className={`px-3 py-1 rounded-md text-[10px] font-semibold transition-all ${
+                  className={`px-3 py-1 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
                     iconTab === 'emoji' ? 'bg-white text-gray-700 shadow-sm' : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
@@ -321,7 +321,7 @@ function ModalForm({ pilot, onSave, onCancel, accent }) {
                 <button
                   type="button"
                   onClick={() => { setIconTab('lucide'); if (!isLucideIcon(icono)) setIcono(currentDefaultLucide); }}
-                  className={`px-3 py-1 rounded-md text-[10px] font-semibold transition-all ${
+                  className={`px-3 py-1 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
                     iconTab === 'lucide' ? 'bg-white text-gray-700 shadow-sm' : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
@@ -338,7 +338,7 @@ function ModalForm({ pilot, onSave, onCancel, accent }) {
                       key={ic}
                       type="button"
                       onClick={() => setIcono(ic)}
-                      className="w-9 h-9 rounded-xl flex items-center justify-center text-base transition-all duration-200"
+                      className="w-9 h-9 rounded-xl flex items-center justify-center text-base transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                       style={{
                         backgroundColor: icono === ic ? color + '20' : 'transparent',
                         outline: icono === ic ? `2px solid ${color}` : '2px solid transparent',
@@ -360,7 +360,7 @@ function ModalForm({ pilot, onSave, onCancel, accent }) {
                         key={name}
                         type="button"
                         onClick={() => setIcono(val)}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200"
+                        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                         style={{
                           backgroundColor: icono === val ? color + '20' : 'transparent',
                           outline: icono === val ? `2px solid ${color}` : '2px solid transparent',
@@ -383,14 +383,14 @@ function ModalForm({ pilot, onSave, onCancel, accent }) {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 py-2.5 rounded-xl font-bold text-sm border transition-all"
+              className="flex-1 py-2.5 rounded-xl font-bold text-sm border transition-all cursor-pointer hover:bg-gray-50 active:scale-98"
               style={{ color: accent, borderColor: accent + '40' }}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl text-white font-bold text-sm transition-all shadow-sm"
+              className="flex-1 py-2.5 rounded-xl text-white font-bold text-sm transition-all shadow-sm cursor-pointer hover:opacity-90 active:scale-98"
               style={{ backgroundColor: accent }}
             >
               {isEditing ? 'Guardar Cambios' : 'Agregar Piloto'}
@@ -424,7 +424,7 @@ export default function PilotsView({ themeMode }) {
         </div>
         <button
           onClick={() => { setEditingPilot(null); setShowForm(true); }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-sm transition-all duration-200 shadow-sm"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-sm transition-all duration-200 shadow-sm cursor-pointer hover:scale-[1.02] hover:opacity-90 active:scale-98"
           style={{ backgroundColor: accent }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>

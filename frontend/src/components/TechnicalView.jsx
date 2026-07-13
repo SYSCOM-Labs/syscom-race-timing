@@ -22,7 +22,7 @@ export default function TechnicalView({ autos, themeMode }) {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="px-5 py-3 text-sm font-medium transition-all duration-200 relative"
+                className="px-5 py-3 text-sm font-medium transition-all duration-200 relative cursor-pointer hover:text-gray-700 active:scale-95"
                 style={{ color: isActive ? accent : '#999' }}
               >
                 {tab.label}

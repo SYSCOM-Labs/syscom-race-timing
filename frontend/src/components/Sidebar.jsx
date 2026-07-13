@@ -53,7 +53,7 @@ export default function Sidebar({ currentView, setCurrentView, themeMode, toggle
             <button
               key={item.id}
               onClick={() => setCurrentView(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${isActive
                   ? 'text-white font-bold shadow-md'
                   : 'text-gray-500 hover:text-gray-200 hover:bg-nav-hover font-semibold'
                 }`}
@@ -73,7 +73,7 @@ export default function Sidebar({ currentView, setCurrentView, themeMode, toggle
       <div className="px-3 pb-6 mt-auto">
         <button
           onClick={toggleTheme}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-white/5 hover:bg-nav-hover transition-all duration-200"
+          className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-white/5 hover:bg-nav-hover cursor-pointer transition-all duration-200"
         >
           <span className="text-xs text-gray-500 uppercase tracking-wider">Tema</span>
           <div className="flex items-center gap-2">
