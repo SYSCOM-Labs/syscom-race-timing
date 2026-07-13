@@ -147,6 +147,29 @@ function EmptyCard({ onClick, accent }) {
   );
 }
 
+function LicensePlate({ matricula, color }) {
+  return (
+    <div className="flex flex-col items-center justify-between bg-gradient-to-b from-gray-50 to-gray-200 border-2 border-gray-300 rounded-lg py-2 px-3 relative shadow select-none w-full"
+         style={{
+           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.12)',
+         }}>
+      {/* Tornillos */}
+      <span className="absolute top-1.5 left-2.5 w-1.5 h-1.5 rounded-full bg-gray-500 border border-gray-400 shadow-inner" />
+      <span className="absolute top-1.5 right-2.5 w-1.5 h-1.5 rounded-full bg-gray-500 border border-gray-400 shadow-inner" />
+      
+      {/* Texto Reto Solar */}
+      <span className="text-[8px] font-black uppercase tracking-widest leading-none mb-1" style={{ color: color }}>
+        RETO SOLAR
+      </span>
+
+      {/* Matrícula */}
+      <span className="text-base font-black font-mono tracking-widest text-gray-800 leading-none pb-0.5 drop-shadow-[0.5px_0.5px_0px_white] truncate max-w-full text-center">
+        {matricula}
+      </span>
+    </div>
+  );
+}
+
 function PilotCard({ pilot, onEdit, onDelete }) {
   const color = pilot.color || '#ea2d45';
 
@@ -194,12 +217,7 @@ function PilotCard({ pilot, onEdit, onDelete }) {
       </div>
 
       <div className="w-full px-5 pb-4 pt-2">
-        <span
-          className="text-[10px] font-bold text-white px-2.5 py-1 rounded-md block text-center truncate"
-          style={{ backgroundColor: color }}
-        >
-          {pilot.matricula}
-        </span>
+        <LicensePlate matricula={pilot.matricula} color={color} />
       </div>
     </div>
   );
