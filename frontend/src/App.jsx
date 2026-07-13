@@ -3,6 +3,8 @@ import useSimulatedRace from './hooks/useSimulatedRace.js';
 import Sidebar from './components/Sidebar.jsx';
 import EnduranceView from './components/EnduranceView.jsx';
 import TechnicalView from './components/TechnicalView.jsx';
+import PilotsView from './components/PilotsView.jsx';
+
 export default function App() {
   const [currentView, setCurrentView] = useState('endurance');
   const [themeMode, setThemeMode] = useState('race');
@@ -11,7 +13,7 @@ export default function App() {
     setThemeMode(prev => prev === 'race' ? 'syscom' : 'race');
   }, []);
 
-  const { autos, cronometro, leader, totalActive, sortedBySpeed, sortedByBrake } = useSimulatedRace();
+  const { autos, cronometro, leader, totalActive } = useSimulatedRace();
 
   return (
     <div className="min-h-screen bg-sidebar-bg flex overflow-hidden">
@@ -25,7 +27,9 @@ export default function App() {
       <main className="flex-1 p-5 overflow-hidden">
         <div className="w-full h-full rounded-3xl p-6 shadow-2xl overflow-y-auto"
              style={{ backgroundColor: '#eeeeee' }}>
-          {currentView === 'endurance' ? (
+          {currentView === 'pilots' ? (
+            <PilotsView themeMode={themeMode} />
+          ) : currentView === 'endurance' ? (
             <EnduranceView
               autos={autos}
               cronometro={cronometro}
@@ -35,8 +39,7 @@ export default function App() {
             />
           ) : (
             <TechnicalView
-              sortedBySpeed={sortedBySpeed}
-              sortedByBrake={sortedByBrake}
+              autos={autos}
               themeMode={themeMode}
             />
           )}

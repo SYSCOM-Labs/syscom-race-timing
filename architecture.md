@@ -90,3 +90,17 @@ module.exports = {
     }
   }
 }
+
+------------ ARQUITECTURA DEL HARDWARE CON VISTA Y CONTROLADOR ------------
+
+[Hardware: RFID / Cámaras / E/S] 
+             │ (Tramas directas vía TCP Sockets o Webhooks)
+             ▼
+    [FastAPI / Python Backend] ──── (Worker concurrente / Asyncio)
+             │ 
+             ├─► [Base de Datos Local: SQLite/PostgreSQL] (Persistencia)
+             │
+             └─► [WebSocket Server]
+                     │ (Broadcasting instantáneo en JSON)
+                     ▼
+          [React Frontend / Dashboard] (Tablero de posiciones en tiempo real)

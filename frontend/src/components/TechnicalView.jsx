@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import LeaderboardTable from './LeaderboardTable.jsx';
+import SpeedTestPanel from './SpeedTestPanel.jsx';
+import BrakeTestPanel from './BrakeTestPanel.jsx';
 import { THEMES } from '../theme.js';
 
 const TABS = [
@@ -7,7 +8,7 @@ const TABS = [
   { id: 'brake', label: 'Frenado' },
 ];
 
-export default function TechnicalView({ sortedBySpeed, sortedByBrake, themeMode }) {
+export default function TechnicalView({ autos, themeMode }) {
   const [activeTab, setActiveTab] = useState('speed');
   const accent = THEMES[themeMode].accent;
 
@@ -36,27 +37,9 @@ export default function TechnicalView({ sortedBySpeed, sortedByBrake, themeMode 
 
         <div className="p-6 flex-1 overflow-y-auto">
           {activeTab === 'speed' ? (
-            <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-4">
-                Ranking por Velocidad Máxima (Radar Hikvision)
-              </p>
-              <LeaderboardTable
-                data={sortedBySpeed}
-                sortKey="velocidadMaxima"
-                themeMode={themeMode}
-              />
-            </div>
+            <SpeedTestPanel autos={autos} themeMode={themeMode} />
           ) : (
-            <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-4">
-                Ranking por Prueba de Frenado (Menos metros = mejor)
-              </p>
-              <LeaderboardTable
-                data={sortedByBrake}
-                sortKey="frenadoMetros"
-                themeMode={themeMode}
-              />
-            </div>
+            <BrakeTestPanel autos={autos} themeMode={themeMode} />
           )}
         </div>
       </div>
