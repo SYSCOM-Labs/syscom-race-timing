@@ -95,14 +95,6 @@ export default function useSimulatedRace() {
     return [...autos].sort((a, b) => b.vueltas - a.vueltas || parseTimeToMs(a.mejorVuelta) - parseTimeToMs(b.mejorVuelta));
   }, [autos]);
 
-  const sortedBySpeed = useCallback(() => {
-    return [...autos].sort((a, b) => b.velocidadMaxima - a.velocidadMaxima);
-  }, [autos]);
-
-  const sortedByBrake = useCallback(() => {
-    return [...autos].sort((a, b) => a.frenadoMetros - b.frenadoMetros);
-  }, [autos]);
-
   const hours = Math.floor(remainingMs / 3600000);
   const minutes = Math.floor((remainingMs % 3600000) / 60000);
   const seconds = Math.floor((remainingMs % 60000) / 1000);
@@ -117,7 +109,5 @@ export default function useSimulatedRace() {
     cronometro,
     leader,
     totalActive,
-    sortedBySpeed: sortedBySpeed(),
-    sortedByBrake: sortedByBrake(),
   };
 }
