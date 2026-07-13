@@ -25,11 +25,18 @@ function BarChartIcon() {
   );
 }
 
+function ShieldIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+  );
+}
+
 const NAV_ITEMS = [
   { id: 'endurance', icon: FlagIcon, label: 'Carrera 4h' },
   { id: 'technical', icon: GaugeIcon, label: 'Pruebas Técnicas' },
   { id: 'pilots', icon: UsersIcon, label: 'Pilotos' },
   { id: 'records', icon: BarChartIcon, label: 'Records' },
+  { id: 'seguridad', icon: ShieldIcon, label: 'Seguridad' },
 ];
 
 export default function Sidebar({ currentView, setCurrentView, themeMode, toggleTheme }) {
@@ -53,7 +60,7 @@ export default function Sidebar({ currentView, setCurrentView, themeMode, toggle
             <button
               key={item.id}
               onClick={() => setCurrentView(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${isActive
+              className={`w-full flex items-center gap-6 px-6 py-4 rounded-xl transition-all duration-200 cursor-pointer ${isActive
                   ? 'text-white font-bold shadow-md'
                   : 'text-gray-500 hover:text-gray-200 hover:bg-nav-hover font-semibold'
                 }`}
