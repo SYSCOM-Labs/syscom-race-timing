@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import usePilots from '../hooks/usePilots.js';
 import useSeguridad from '../hooks/useSeguridad.js';
 import { THEMES } from '../theme.js';
+import { renderIcon, isLucideIcon, LUCIDE_PREFIX } from '../utils/iconRenderer.jsx';
 
 const FIELDS = [
   { key: 'casco', label: 'Casco' },
@@ -9,19 +10,6 @@ const FIELDS = [
   { key: 'puntosEmpuje', label: 'Empuje' },
   { key: 'paroEmergencia', label: 'Paro Emerg.' },
 ];
-
-const LUCIDE_PREFIX = '__lucide__';
-
-const LUCIDE_ICONS_MAP = {};
-
-function renderIcon(value, size = 'w-5 h-5') {
-  if (typeof value === 'string' && value.startsWith(LUCIDE_PREFIX)) {
-    const name = value.replace(LUCIDE_PREFIX, '');
-    const IconComp = LUCIDE_ICONS_MAP[name];
-    if (IconComp) return <IconComp className={size} />;
-  }
-  return <span className="text-lg leading-none">{value || '🏎️'}</span>;
-}
 
 function SafetyIcon({ filled }) {
   return (
@@ -47,9 +35,7 @@ function SeguridadCard({ pilot, status, onClick }) {
         <div className="flex items-center gap-2.5 mb-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-lg"
                style={{ backgroundColor: color + '18', color }}>
-            {typeof pilot.icono === 'string' && pilot.icono.startsWith(LUCIDE_PREFIX)
-              ? renderIcon(pilot.icono, 'w-[18px] h-[18px]')
-              : <span className="text-lg">{pilot.icono || '🏎️'}</span>}
+            {renderIcon(pilot.icono, 'w-[18px] h-[18px]')}
           </div>
           <div className="min-w-0">
             <p className="text-sm font-bold text-gray-800 leading-tight truncate">{pilot.piloto}</p>
