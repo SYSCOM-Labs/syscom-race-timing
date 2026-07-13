@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar.jsx';
 import EnduranceView from './components/EnduranceView.jsx';
 import TechnicalView from './components/TechnicalView.jsx';
 import PilotsView from './components/PilotsView.jsx';
+import RecordsView from './components/RecordsView.jsx';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('endurance');
@@ -29,6 +30,8 @@ export default function App() {
              style={{ backgroundColor: '#eeeeee' }}>
           {currentView === 'pilots' ? (
             <PilotsView themeMode={themeMode} />
+          ) : currentView === 'records' ? (
+            <RecordsView autos={autos} themeMode={themeMode} />
           ) : currentView === 'endurance' ? (
             <EnduranceView
               autos={autos}
