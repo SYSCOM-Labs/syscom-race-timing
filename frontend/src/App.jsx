@@ -1,122 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useCallback } from 'react';
+import useSimulatedRace from './hooks/useSimulatedRace.js';
+import Sidebar from './components/Sidebar.jsx';
+import EnduranceView from './components/EnduranceView.jsx';
+import TechnicalView from './components/TechnicalView.jsx';
+export default function App() {
+  const [currentView, setCurrentView] = useState('endurance');
+  const [themeMode, setThemeMode] = useState('race');
 
-function App() {
-  const [count, setCount] = useState(0)
+  const toggleTheme = useCallback(() => {
+    setThemeMode(prev => prev === 'race' ? 'syscom' : 'race');
+  }, []);
+
+  const { autos, cronometro, leader, totalActive, sortedBySpeed, sortedByBrake } = useSimulatedRace();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-race-dark flex overflow-hidden">
+      <Sidebar
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+        themeMode={themeMode}
+        toggleTheme={toggleTheme}
+      />
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <main className="flex-1 p-6 overflow-hidden">
+        <div className="w-full h-full rounded-3xl p-6 shadow-lg overflow-y-auto"
+             style={{ backgroundColor: '#eeeeee' }}>
+          {currentView === 'endurance' ? (
+            <EnduranceView
+              autos={autos}
+              cronometro={cronometro}
+              leader={leader}
+              totalActive={totalActive}
+              themeMode={themeMode}
+            />
+          ) : (
+            <TechnicalView
+              sortedBySpeed={sortedBySpeed}
+              sortedByBrake={sortedByBrake}
+              themeMode={themeMode}
+            />
+          )}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </main>
+    </div>
+  );
 }
-
-export default App
