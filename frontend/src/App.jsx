@@ -14,7 +14,7 @@ export default function App() {
   const { autos, cronometro, leader, totalActive, sortedBySpeed, sortedByBrake } = useSimulatedRace();
 
   return (
-    <div className="min-h-screen bg-race-dark flex overflow-hidden">
+    <div className="min-h-screen bg-sidebar-bg flex overflow-hidden">
       <Sidebar
         currentView={currentView}
         setCurrentView={setCurrentView}
@@ -22,8 +22,8 @@ export default function App() {
         toggleTheme={toggleTheme}
       />
 
-      <main className="flex-1 p-6 overflow-hidden">
-        <div className="w-full h-full rounded-3xl p-6 shadow-lg overflow-y-auto"
+      <main className="flex-1 p-5 overflow-hidden">
+        <div className="w-full h-full rounded-3xl p-6 shadow-2xl overflow-y-auto"
              style={{ backgroundColor: '#eeeeee' }}>
           {currentView === 'endurance' ? (
             <EnduranceView

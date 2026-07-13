@@ -13,8 +13,6 @@
   --color-status-pitstop: #ef4444;
   --color-sidebar-bg: #0a0a0a;
   --color-nav-hover: rgba(255, 255, 255, 0.06);
-  --color-nav-active-syscom: rgba(44, 70, 163, 0.25);
-  --color-nav-active-race: rgba(234, 45, 69, 0.25);
 }
 
 @layer base {

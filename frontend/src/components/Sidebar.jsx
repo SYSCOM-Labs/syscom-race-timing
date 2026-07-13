@@ -1,8 +1,16 @@
 import { THEMES } from '../theme.js';
 
+function FlagIcon() { return (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+); }
+
+function GaugeIcon() { return (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 12l2-5"/><path d="M12 12l-2.5 3"/></svg>
+); }
+
 const NAV_ITEMS = [
-  { id: 'endurance', icon: '🏁', label: 'Carrera 4h' },
-  { id: 'technical', icon: '⚡', label: 'Pruebas Técnicas' },
+  { id: 'endurance', icon: FlagIcon, label: 'Carrera 4h' },
+  { id: 'technical', icon: GaugeIcon, label: 'Pruebas Técnicas' },
 ];
 
 export default function Sidebar({ currentView, setCurrentView, themeMode, toggleTheme }) {
@@ -10,7 +18,7 @@ export default function Sidebar({ currentView, setCurrentView, themeMode, toggle
   const isRace = themeMode === 'race';
 
   return (
-    <aside className="w-64 bg-sidebar-bg min-h-screen flex flex-col shrink-0 border-r border-white/5">
+    <aside className="w-64 bg-sidebar-bg min-h-screen flex flex-col shrink-0">
       <div className="px-6 pt-8 pb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-sm"
@@ -27,22 +35,24 @@ export default function Sidebar({ currentView, setCurrentView, themeMode, toggle
       <nav className="flex-1 px-3 space-y-1">
         {NAV_ITEMS.map(item => {
           const isActive = currentView === item.id;
+          const Icon = item.icon;
           return (
             <button
               key={item.id}
               onClick={() => setCurrentView(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-300 hover:bg-nav-hover'
+                  ? 'text-white font-bold shadow-md'
+                  : 'text-gray-500 hover:text-gray-200 hover:bg-nav-hover font-semibold'
               }`}
               style={{
-                backgroundColor: isActive ? theme.accent + '20' : 'transparent',
-                borderLeft: isActive ? `3px solid ${theme.accent}` : '3px solid transparent',
+                backgroundColor: isActive ? theme.accent : 'transparent',
               }}
             >
-              <span className="text-base">{item.icon}</span>
-              <span>{item.label}</span>
+              <span className={isActive ? 'text-white' : 'text-gray-400'}>
+                <Icon />
+              </span>
+              <span className="text-sm tracking-wide">{item.label}</span>
             </button>
           );
         })}

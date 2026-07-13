@@ -7,8 +7,6 @@ function getPositionStyle(pos, accent) {
   return { bg: 'transparent', border: '1px solid transparent', textColor: '#888' };
 }
 
-const MEDALS = ['🥇', '🥈', '🥉'];
-
 export default function LeaderboardTable({ data, sortKey, themeMode }) {
   const accent = THEMES[themeMode].accent;
 
@@ -37,7 +35,11 @@ export default function LeaderboardTable({ data, sortKey, themeMode }) {
                 style={{ backgroundColor: style.bg }}
               >
                 <td className="py-3 px-4 font-bold text-base" style={{ color: style.textColor }}>
-                  {pos <= 3 ? MEDALS[pos - 1] : pos}
+                  {pos <= 3 ? (
+                    <span className="text-sm font-black" style={{ color: pos === 1 ? accent : '#666' }}>#{pos}</span>
+                  ) : (
+                    <span className="text-gray-400">#{pos}</span>
+                  )}
                 </td>
                 <td className="py-3 px-4">
                   <span className="text-xs font-bold text-white px-2 py-0.5 rounded"
