@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import usePilots from '../hooks/usePilots.js';
 import useSeguridad from '../hooks/useSeguridad.js';
 import { THEMES } from '../theme.js';
-import { renderIcon, isLucideIcon, LUCIDE_PREFIX } from '../utils/iconRenderer.jsx';
+import { renderIcon } from '../utils/iconRenderer.jsx';
 
 const FIELDS = [
   { key: 'casco', label: 'Casco' },
@@ -85,9 +85,7 @@ function SeguridadModal({ pilot, status, onToggle, onClose }) {
         <div className="flex items-center gap-3 mb-5">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
                style={{ backgroundColor: color + '18', color }}>
-            {typeof pilot.icono === 'string' && pilot.icono.startsWith(LUCIDE_PREFIX)
-              ? renderIcon(pilot.icono, 'w-5 h-5')
-              : <span className="text-lg">{pilot.icono || '🏎️'}</span>}
+            {renderIcon(pilot.icono, 'w-5 h-5')}
           </div>
           <div>
             <h3 className="text-lg font-bold text-gray-800">{pilot.piloto}</h3>

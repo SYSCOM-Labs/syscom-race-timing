@@ -15,7 +15,7 @@ export default function App() {
     setThemeMode(prev => prev === 'race' ? 'syscom' : 'race');
   }, []);
 
-  const { autos, cronometro, leader, totalActive } = useSimulatedRace();
+  const { autos, cronometro, leader, remainingMs, totalMs } = useSimulatedRace();
 
   return (
     <div className="min-h-screen bg-sidebar-bg flex overflow-hidden">
@@ -40,7 +40,8 @@ export default function App() {
               autos={autos}
               cronometro={cronometro}
               leader={leader}
-              totalActive={totalActive}
+              remainingMs={remainingMs}
+              totalMs={totalMs}
               themeMode={themeMode}
             />
           ) : (
