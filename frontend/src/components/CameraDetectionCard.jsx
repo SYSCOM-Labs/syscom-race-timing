@@ -14,33 +14,50 @@ export default function CameraDetectionCard({ detection, accent }) {
   }
 
   return (
-    <div className="h-full w-full bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col overflow-hidden">
+    <div className="relative h-full w-full bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between p-4 transition-all duration-300 hover:shadow-md overflow-hidden group">
+      
+      {/* Barra superior de acento táctico para identificar el auto/estado */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 transition-colors duration-300" 
+           style={{ backgroundColor: accent }} />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-3 gap-0.5">
-        <span className="font-black text-sm tracking-wider text-center leading-tight truncate max-w-full"
-              style={{ color: accent }}>
+      {/* 1. Encabezado de Hardware: Diagnóstico y Origen de la Trama */}
+      <div className="flex items-center justify-between w-full mb-2">
+      </div>
+
+      {/* 2. Cuerpo Principal: Identificación Asimétrica de Alto Impacto */}
+      <div className="flex-1 flex flex-col justify-center my-2">
+        <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-0.5">MATRICULA</div>
+        <h4 className="font-black text-2xl tracking-tight leading-none text-gray-900 truncate group-hover:scale-[1.01] origin-left transition-transform duration-200">
           {detection.matricula}
-        </span>
-
-        <div className="flex items-baseline gap-0.5 mt-1">
-          <span className="text-2xl font-black leading-none tabular-nums" style={{ color: accent }}>
+        </h4>
+        
+        {/* Contador de Vueltas Integrado */}
+        <div className="flex items-baseline gap-1 mt-2">
+          <span className="text-4xl font-black tracking-tighter tabular-nums leading-none" style={{ color: accent }}>
             {detection.vuelta}
           </span>
-          <span className="text-[9px] text-gray-400 font-medium ml-0.5">vta</span>
-        </div>
-
-        <div className="flex items-center gap-3 mt-1.5 pt-1.5 border-t border-gray-100 w-full justify-center">
-          <div className="text-center">
-            <p className="text-[10px] font-mono font-bold text-gray-700 leading-tight">{detection.tiempoVuelta}</p>
-            <p className="text-[8px] text-gray-400 uppercase tracking-wider">Vuelta</p>
-          </div>
-          <div className="w-px h-6 bg-gray-100" />
-          <div className="text-center">
-            <p className="text-[10px] font-mono font-bold text-gray-700 leading-tight">{detection.velocidad}</p>
-            <p className="text-[8px] text-gray-400 uppercase tracking-wider">Km/h</p>
-          </div>
+          <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest font-mono"> Vuelta</span>
         </div>
       </div>
+
+      {/* 3. Footer: Grid de Métricas Críticas (Tipografía Mono para Datos) */}
+      <div className="grid grid-cols-2 gap-2 pt-3 border-t border-gray-100 w-full mt-auto">
+        <div className="flex flex-col justify-end">
+          <span className="text-[9px] font-black uppercase tracking-wider text-gray-400 font-mono">Lap Time</span>
+          <span className="text-[15px] font-mono font-bold text-gray-800 tabular-nums leading-tight tracking-tight mt-0.5">
+            {detection.tiempoVuelta}
+          </span>
+        </div>
+        
+        <div className="flex flex-col justify-end pl-3 border-l border-gray-100">
+          <span className="text-[9px] font-black uppercase tracking-wider text-gray-400 font-mono">Radar Vel.</span>
+          <span className="text-[15px] font-mono font-bold text-gray-800 tabular-nums leading-tight tracking-tight mt-0.5 flex items-baseline gap-0.5">
+            {detection.velocidad}
+            <span className="text-[9px] text-gray-400 font-sans font-bold uppercase tracking-normal">km/h</span>
+          </span>
+        </div>
+      </div>
+
     </div>
   );
 }

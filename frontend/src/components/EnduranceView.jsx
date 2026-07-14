@@ -185,13 +185,7 @@ export default function EnduranceView({
         />
         <LeaderCard leader={leader} accent={accent} />
         <div className="flex flex-col gap-2 min-h-0">
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: accent + '18', color: accent }}>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M23 7l-7 5 7 5V7z" />
-                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-              </svg>
-            </div>
+          <div className="flex items-center gap-2 shrink-0 justify-center">
             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Últimas detecciones</span>
           </div>
           <div className="flex-1 grid grid-cols-3 gap-3 min-h-0">
