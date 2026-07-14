@@ -22,9 +22,11 @@ function parseTimeToMs(timeStr) {
   return parseInt(m) * 60000 + parseInt(s) * 1000 + parseInt(ms) * 10;
 }
 
+export const RACE_TOTAL_MS = 4 * 60 * 60 * 1000;
+
 export default function useSimulatedRace() {
   const [autos, setAutos] = useState(INITIAL_AUTOS);
-  const [remainingMs, setRemainingMs] = useState(4 * 60 * 60 * 1000);
+  const [remainingMs, setRemainingMs] = useState(RACE_TOTAL_MS);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -109,5 +111,7 @@ export default function useSimulatedRace() {
     cronometro,
     leader,
     totalActive,
+    remainingMs,
+    totalMs: RACE_TOTAL_MS,
   };
 }

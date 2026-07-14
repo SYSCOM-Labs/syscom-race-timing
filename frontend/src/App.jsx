@@ -6,6 +6,7 @@ import TechnicalView from './components/TechnicalView.jsx';
 import PilotsView from './components/PilotsView.jsx';
 import RecordsView from './components/RecordsView.jsx';
 import SeguridadView from './components/SeguridadView.jsx';
+import CameraView from './components/CameraView.jsx';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('endurance');
@@ -15,10 +16,10 @@ export default function App() {
     setThemeMode(prev => prev === 'race' ? 'syscom' : 'race');
   }, []);
 
-  const { autos, cronometro, leader, totalActive } = useSimulatedRace();
+  const { autos, cronometro, leader, remainingMs, totalMs } = useSimulatedRace();
 
   return (
-    <div className="min-h-screen bg-sidebar-bg flex overflow-hidden">
+    <div className="h-svh bg-sidebar-bg flex overflow-hidden">
       <Sidebar
         currentView={currentView}
         setCurrentView={setCurrentView}
@@ -26,11 +27,18 @@ export default function App() {
         toggleTheme={toggleTheme}
       />
 
-      <main className="flex-1 p-5 overflow-hidden">
-        <div className="w-full h-full rounded-3xl p-6 shadow-2xl overflow-y-auto"
-             style={{ backgroundColor: '#eeeeee' }}>
+      <main className="flex-1 p-5 overflow-hidden min-h-0 min-w-0">
+        <div
+          className={[
+            'w-full h-full rounded-3xl p-6 shadow-2xl min-h-0',
+            currentView === 'endurance' ? 'overflow-hidden' : 'overflow-y-auto',
+          ].join(' ')}
+          style={{ backgroundColor: '#eeeeee' }}
+        >
           {currentView === 'seguridad' ? (
             <SeguridadView themeMode={themeMode} />
+          ) : currentView === 'camera' ? (
+            <CameraView themeMode={themeMode} />
           ) : currentView === 'pilots' ? (
             <PilotsView themeMode={themeMode} />
           ) : currentView === 'records' ? (
@@ -40,7 +48,8 @@ export default function App() {
               autos={autos}
               cronometro={cronometro}
               leader={leader}
-              totalActive={totalActive}
+              remainingMs={remainingMs}
+              totalMs={totalMs}
               themeMode={themeMode}
             />
           ) : (

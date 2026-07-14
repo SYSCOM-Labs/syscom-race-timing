@@ -31,12 +31,19 @@ function ShieldIcon() {
   );
 }
 
+function CameraIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
+  );
+}
+
 const NAV_ITEMS = [
   { id: 'endurance', icon: FlagIcon, label: 'Carrera 4h' },
   { id: 'technical', icon: GaugeIcon, label: 'Pruebas Técnicas' },
   { id: 'pilots', icon: UsersIcon, label: 'Pilotos' },
   { id: 'records', icon: BarChartIcon, label: 'Records' },
   { id: 'seguridad', icon: ShieldIcon, label: 'Seguridad' },
+  { id: 'camera', icon: CameraIcon, label: 'Cámara' },
 ];
 
 export default function Sidebar({ currentView, setCurrentView, themeMode, toggleTheme }) {
