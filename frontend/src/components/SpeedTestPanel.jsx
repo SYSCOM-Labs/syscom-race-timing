@@ -35,31 +35,37 @@ function ParticipantCard({ auto, isSelected, isDisabled, accent, onClick }) {
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className="relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 hover:scale-105 active:scale-95 text-left w-full"
+      className={[
+        'relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 text-left w-full',
+        'transition-[border-color,background-color,box-shadow] duration-150',
+        'cursor-pointer disabled:cursor-not-allowed disabled:opacity-50',
+        isSelected
+          ? 'border-transparent'
+          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50',
+      ].join(' ')}
       style={{
-        borderColor: isSelected ? accent : '#e5e7eb',
-        backgroundColor: isSelected ? accent + '10' : 'white',
-        boxShadow: isSelected ? `0 4px 14px ${accent}30` : '0 1px 3px rgba(0,0,0,0.05)',
+        borderColor: isSelected ? accent : undefined,
+        backgroundColor: isSelected ? accent + '10' : undefined,
+        boxShadow: isSelected ? `0 2px 8px ${accent}25` : undefined,
       }}
     >
       {isSelected && (
         <div
-          className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center shadow-sm"
+          className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
           style={{ backgroundColor: accent }}
         >
-          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
           </svg>
         </div>
       )}
-      {/* Plate badge */}
       <div
-        className="w-full text-center font-black text-base tracking-widest py-2 px-2 rounded-lg text-white shadow-inner leading-tight"
-        style={{ backgroundColor: isSelected ? accent : '#374151' }}
+        className="w-full text-center font-black text-sm tracking-wider py-1.5 px-1.5 rounded-md text-white leading-tight truncate"
+        style={{ backgroundColor: isSelected ? accent : '#1f2937' }}
       >
         {auto.matricula}
       </div>
-      <p className="text-[11px] font-semibold text-gray-500 text-center leading-tight w-full truncate px-1">
+      <p className="text-[10px] font-medium text-gray-500 text-center leading-tight w-full truncate">
         {auto.equipo}
       </p>
     </button>
@@ -222,7 +228,7 @@ export default function SpeedTestPanel({ autos, themeMode }) {
               </div>
             ) : (
               /* Grid de tarjetas */
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 max-h-48 overflow-y-auto pr-1">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 max-h-52 overflow-y-auto overscroll-contain pr-1">
                 {autos.length === 0 ? (
                   <div className="col-span-full py-6 text-center text-gray-400 text-sm">
                     No hay participantes registrados
@@ -251,8 +257,8 @@ export default function SpeedTestPanel({ autos, themeMode }) {
             }}
           >
             {/* Decorative bg circles */}
-            <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-5" style={{ backgroundColor: accent }} />
-            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-5" style={{ backgroundColor: accent }} />
+            <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-12 blur-xl" style={{ backgroundColor: accent }} />
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-12 blur-xl" style={{ backgroundColor: accent }} />
 
             <div className="text-center relative z-10">
               {phase === 'idle' && (
