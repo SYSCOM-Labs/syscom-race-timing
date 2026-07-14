@@ -17,7 +17,7 @@ export default function App() {
     setThemeMode(prev => prev === 'race' ? 'syscom' : 'race');
   }, []);
 
-  const { autos, cronometro, leader, remainingMs, totalMs, isRunning, toggleRace } = useSimulatedRace();
+  const { autos, cronometro, leader, remainingMs, totalMs, isRunning, toggleRace, cameraDetections } = useSimulatedRace();
 
   return (
     <div className="h-svh bg-sidebar-bg flex overflow-hidden">
@@ -67,6 +67,7 @@ export default function App() {
               isRunning={isRunning}
               onToggleRace={toggleRace}
               themeMode={themeMode}
+              cameraDetections={cameraDetections}
             />
           ) : (
             <TechnicalView

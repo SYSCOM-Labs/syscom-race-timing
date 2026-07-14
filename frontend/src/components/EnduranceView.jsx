@@ -1,6 +1,6 @@
 import { sileo } from 'sileo';
 import CarCard, { STANDINGS_COLS } from './CarCard.jsx';
-import CameraPanel from './CameraPanel.jsx';
+import CameraDetectionCard from './CameraDetectionCard.jsx';
 import { THEMES } from '../theme.js';
 
 function PlayIcon() {
@@ -156,6 +156,7 @@ export default function EnduranceView({
   themeMode,
   isRunning,
   onToggleRace,
+  cameraDetections = [],
 }) {
   const accent = THEMES[themeMode].accent;
 
@@ -172,7 +173,7 @@ export default function EnduranceView({
 
   return (
     <div className="h-full min-h-0 flex flex-col gap-3 overflow-hidden">
-      {/* Top: chrono (25%) + leader (25%) + camera (50%) */}
+      {/* Top: chrono, leader + últimas detecciones */}
       <div className="shrink-0 grid grid-cols-[1fr_1fr_2fr] gap-3 h-[260px] xl:h-[300px]">
         <CircularTimer
           cronometro={cronometro}
@@ -180,10 +181,29 @@ export default function EnduranceView({
           totalMs={totalMs}
           accent={accent}
           isRunning={isRunning}
-            onToggle={handleToggleRace}
+          onToggle={handleToggleRace}
         />
         <LeaderCard leader={leader} accent={accent} />
-        <CameraPanel accent={accent} />
+        <div className="flex flex-col gap-2 min-h-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: accent + '18', color: accent }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M23 7l-7 5 7 5V7z" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+            </div>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Últimas detecciones</span>
+          </div>
+          <div className="flex-1 grid grid-cols-3 gap-3 min-h-0">
+            {[0, 1, 2].map(i => (
+              <CameraDetectionCard
+                key={i}
+                detection={cameraDetections[i] || null}
+                accent={accent}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Standings */}

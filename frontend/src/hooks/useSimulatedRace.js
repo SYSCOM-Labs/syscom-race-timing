@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const INITIAL_AUTOS = [
   { id: '01', matricula: 'CUERVO-4.0', equipo: 'Universidad Tecnológica', vueltas: 12, ultimaVuelta: '01:24.52', mejorVuelta: '01:22.10', velocidadMaxima: 45.2, frenadoMetros: 3.50, status: 'active' },
@@ -28,6 +28,10 @@ export default function useSimulatedRace() {
   const [autos, setAutos] = useState(INITIAL_AUTOS);
   const [remainingMs, setRemainingMs] = useState(RACE_TOTAL_MS);
   const [isRunning, setIsRunning] = useState(false);
+  const [cameraDetections, setCameraDetections] = useState([]);
+  const autosRef = useRef(autos);
+
+  useEffect(() => { autosRef.current = autos; }, [autos]);
 
   const toggleRace = useCallback(() => {
     if (isRunning) {
@@ -79,6 +83,9 @@ export default function useSimulatedRace() {
       const randomId = String(Math.floor(Math.random() * 6) + 1).padStart(2, '0');
       const incrementLap = Math.random() < 0.3;
 
+      const currentAutos = autosRef.current;
+      const detectedAuto = currentAutos.find(a => a.id === randomId);
+
       setAutos(prev => prev.map(auto => {
         if (auto.id !== randomId) return auto;
 
@@ -106,6 +113,20 @@ export default function useSimulatedRace() {
 
         return updated;
       }));
+
+      if (detectedAuto) {
+        setCameraDetections(prev => {
+          const detection = {
+            id: Date.now().toString(),
+            matricula: detectedAuto.matricula,
+            vuelta: detectedAuto.vueltas + (incrementLap ? 1 : 0),
+            tiempoVuelta: detectedAuto.ultimaVuelta || '00:00.00',
+            velocidad: detectedAuto.velocidadMaxima || 0,
+          };
+          const updated = [detection, ...prev];
+          return updated.slice(0, 3);
+        });
+      }
     }, 3000);
 
     return () => clearInterval(interval);
@@ -133,5 +154,6 @@ export default function useSimulatedRace() {
     totalMs: RACE_TOTAL_MS,
     isRunning,
     toggleRace,
+    cameraDetections,
   };
 }
