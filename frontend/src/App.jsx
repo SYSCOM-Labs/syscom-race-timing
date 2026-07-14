@@ -18,7 +18,7 @@ export default function App() {
   const { autos, cronometro, leader, remainingMs, totalMs } = useSimulatedRace();
 
   return (
-    <div className="min-h-screen bg-sidebar-bg flex overflow-hidden">
+    <div className="h-svh bg-sidebar-bg flex overflow-hidden">
       <Sidebar
         currentView={currentView}
         setCurrentView={setCurrentView}
@@ -26,9 +26,14 @@ export default function App() {
         toggleTheme={toggleTheme}
       />
 
-      <main className="flex-1 p-5 overflow-hidden">
-        <div className="w-full h-full rounded-3xl p-6 shadow-2xl overflow-y-auto"
-             style={{ backgroundColor: '#eeeeee' }}>
+      <main className="flex-1 p-5 overflow-hidden min-h-0 min-w-0">
+        <div
+          className={[
+            'w-full h-full rounded-3xl p-6 shadow-2xl min-h-0',
+            currentView === 'endurance' ? 'overflow-hidden' : 'overflow-y-auto',
+          ].join(' ')}
+          style={{ backgroundColor: '#eeeeee' }}
+        >
           {currentView === 'seguridad' ? (
             <SeguridadView themeMode={themeMode} />
           ) : currentView === 'pilots' ? (
