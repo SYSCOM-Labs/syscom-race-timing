@@ -6,6 +6,7 @@ import TechnicalView from './components/TechnicalView.jsx';
 import PilotsView from './components/PilotsView.jsx';
 import RecordsView from './components/RecordsView.jsx';
 import SeguridadView from './components/SeguridadView.jsx';
+import CameraView from './components/CameraView.jsx';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('endurance');
@@ -36,6 +37,8 @@ export default function App() {
         >
           {currentView === 'seguridad' ? (
             <SeguridadView themeMode={themeMode} />
+          ) : currentView === 'camera' ? (
+            <CameraView themeMode={themeMode} />
           ) : currentView === 'pilots' ? (
             <PilotsView themeMode={themeMode} />
           ) : currentView === 'records' ? (

@@ -256,10 +256,6 @@ export default function SpeedTestPanel({ autos, themeMode }) {
               border: `2px solid ${phase === 'running' ? '#fca5a5' : phase === 'complete' ? accent + '30' : '#e5e7eb'}`,
             }}
           >
-            {/* Decorative bg circles */}
-            <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-12 blur-xl" style={{ backgroundColor: accent }} />
-            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-12 blur-xl" style={{ backgroundColor: accent }} />
-
             <div className="text-center relative z-10">
               {phase === 'idle' && (
                 <div className="flex flex-col items-center gap-3">

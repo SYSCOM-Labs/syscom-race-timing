@@ -1,4 +1,5 @@
 import CarCard, { STANDINGS_COLS } from './CarCard.jsx';
+import CameraPanel from './CameraPanel.jsx';
 import { THEMES } from '../theme.js';
 
 function CircularTimer({ cronometro, remainingMs, totalMs, accent }) {
@@ -109,72 +110,6 @@ function LeaderCard({ leader, accent }) {
             <p className="text-[8px] text-gray-400 uppercase tracking-wider mt-0.5">km/h</p>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function CameraPanel({ accent }) {
-  return (
-    <div className="h-full w-full flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2.5 border-b border-gray-100 shrink-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="relative flex h-2.5 w-2.5 shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-60" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[11px] font-bold text-gray-800 uppercase tracking-widest leading-none truncate">
-              Cámara
-            </p>
-            <p className="text-[10px] text-gray-400 mt-0.5 truncate">Meta / pista</p>
-          </div>
-        </div>
-        <span
-          className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md text-white shrink-0"
-          style={{ backgroundColor: accent }}
-        >
-          Live
-        </span>
-      </div>
-
-      <div className="flex-1 min-h-0 relative bg-[#0f1115] flex items-center justify-center">
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-          }}
-        />
-
-        <div className="relative z-10 flex flex-col items-center gap-2.5 px-4 text-center">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ backgroundColor: accent + '22', color: accent }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M23 7l-7 5 7 5V7z" />
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white/90">Esperando señal</p>
-            <p className="text-[11px] text-white/40 mt-1 leading-relaxed max-w-[160px]">
-              El video se mostrará al conectar el stream
-            </p>
-          </div>
-        </div>
-
-        <div className="absolute top-3 left-3 w-3.5 h-3.5 border-l-2 border-t-2 border-white/25 rounded-tl" />
-        <div className="absolute top-3 right-3 w-3.5 h-3.5 border-r-2 border-t-2 border-white/25 rounded-tr" />
-        <div className="absolute bottom-3 left-3 w-3.5 h-3.5 border-l-2 border-b-2 border-white/25 rounded-bl" />
-        <div className="absolute bottom-3 right-3 w-3.5 h-3.5 border-r-2 border-b-2 border-white/25 rounded-br" />
-      </div>
-
-      <div className="px-3 py-2 border-t border-gray-100 flex items-center justify-between shrink-0 bg-gray-50/80">
-        <span className="text-[10px] font-mono text-gray-400 truncate">CAM-01</span>
-        <span className="text-[10px] font-semibold text-gray-400">Sin señal</span>
       </div>
     </div>
   );
