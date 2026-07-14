@@ -1,4 +1,4 @@
-import CarCard from './CarCard.jsx';
+import CarCard, { STANDINGS_COLS } from './CarCard.jsx';
 import { THEMES } from '../theme.js';
 
 function CircularTimer({ cronometro, remainingMs, totalMs, accent }) {
@@ -199,22 +199,30 @@ export default function EnduranceView({ autos, cronometro, remainingMs, totalMs,
 
       {/* Standings */}
       <div className="flex-1 min-h-0 flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-100 shrink-0">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-[11px] font-bold text-gray-800 uppercase tracking-widest">Posiciones</p>
-              <p className="text-[10px] text-gray-400 mt-0.5">Ordenadas por vueltas</p>
-            </div>
-            <div className="hidden sm:flex items-center gap-4 text-[9px] font-bold text-gray-300 uppercase tracking-wider">
-              <span className="w-14 text-center">Vueltas</span>
-              <span className="w-[7.5rem]">Tiempos</span>
-              <span className="hidden lg:inline w-[6.5rem]">Datos</span>
-              <span className="w-[5.5rem] text-right">Estado</span>
-            </div>
+        <div className="px-2 pt-3 pb-2 border-b border-gray-100 shrink-0">
+          <div className="px-3 mb-2">
+            <p className="text-[11px] font-bold text-gray-800 uppercase tracking-widest">Posiciones</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">Ordenadas por vueltas</p>
+          </div>
+          <div
+            className="grid items-center gap-x-2 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider"
+            style={{ gridTemplateColumns: STANDINGS_COLS }}
+          >
+            <span className="text-center">Pos</span>
+            <span className="text-center">#</span>
+            <span className="text-center">Matrícula</span>
+            <span className="text-center">Rol</span>
+            <span className="text-center">Equipo</span>
+            <span className="text-center">Vueltas</span>
+            <span className="text-center">Última</span>
+            <span className="text-center">Mejor</span>
+            <span className="text-center">Vel.</span>
+            <span className="text-center">Freno</span>
+            <span className="text-center">Estado</span>
           </div>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto p-2 space-y-1.5">
+        <div className="flex-1 min-h-0 overflow-y-auto p-2 space-y-1">
           {autos.length === 0 ? (
             <div className="h-full flex items-center justify-center text-sm text-gray-400">
               Sin participantes en pista
