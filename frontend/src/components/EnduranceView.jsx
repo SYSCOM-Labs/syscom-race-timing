@@ -185,8 +185,8 @@ export default function EnduranceView({ autos, cronometro, remainingMs, totalMs,
 
   return (
     <div className="h-full min-h-0 flex flex-col gap-3 overflow-hidden">
-      {/* Top: chrono (37.5%) + leader (37.5%) + camera (25%) — sin huecos */}
-      <div className="shrink-0 grid grid-cols-[3fr_3fr_2fr] gap-3 h-[220px] xl:h-[260px]">
+      {/* Top: chrono (25%) + leader (25%) + camera (50%) */}
+      <div className="shrink-0 grid grid-cols-[1fr_1fr_2fr] gap-3 h-[260px] xl:h-[300px]">
         <CircularTimer
           cronometro={cronometro}
           remainingMs={remainingMs}
