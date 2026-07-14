@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { sileo } from 'sileo';
 import { THEMES } from '../theme.js';
 
 const STORAGE_KEY = 'syscom_records_velocidad';
@@ -143,6 +144,7 @@ export default function SpeedTestPanel({ autos, themeMode }) {
     const updated = [newRecord, ...records];
     setRecords(updated);
     saveRecords(updated);
+    sileo.success({ title: 'Tiempo guardado', description: `${selectedAuto.matricula} — ${formatTime(elapsedMs)}` });
   }, [selectedAuto, phase, elapsedMs, records]);
 
   const resetAll = useCallback(() => {
@@ -158,11 +160,13 @@ export default function SpeedTestPanel({ autos, themeMode }) {
     const updated = records.filter(r => r.id !== recordId);
     setRecords(updated);
     saveRecords(updated);
+    sileo.success({ title: 'Registro eliminado' });
   }, [records]);
 
   const clearAllRecords = useCallback(() => {
     setRecords([]);
     saveRecords([]);
+    sileo.success({ title: 'Historial limpiado', description: 'Todos los registros de velocidad eliminados' });
   }, []);
 
   const bestTime = records.length > 0 ? Math.min(...records.map(r => r.tiempoMs)) : null;

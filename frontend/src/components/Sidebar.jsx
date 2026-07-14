@@ -54,7 +54,7 @@ export default function Sidebar({ currentView, setCurrentView, themeMode, toggle
     <aside className="w-64 bg-sidebar-bg min-h-screen flex flex-col shrink-0">
       <div className="px-2 pt-8 pb-6 flex flex-col gap-2">
         <div className="p-2 rounded-lg invert flex items-center justify-center">
-          <img src={syscomLogo} alt="SYSCOM" className="h-9 w-auto object-contain" />
+          <img src={syscomLogo} alt="SYSCOM" draggable="false" className="h-9 w-auto object-contain" />
         </div>
         <p className="text-[10px] text-gray-500 uppercase tracking-widest text-center mt-1">Reto Solar 2026</p>
       </div>

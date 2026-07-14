@@ -1,8 +1,25 @@
+import { sileo } from 'sileo';
 import CarCard, { STANDINGS_COLS } from './CarCard.jsx';
 import CameraPanel from './CameraPanel.jsx';
 import { THEMES } from '../theme.js';
 
-function CircularTimer({ cronometro, remainingMs, totalMs, accent }) {
+function PlayIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M8 5v14l11-7L8 5z" />
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M6 5h4v14H6V5zm8 0h4v14h-4V5z" />
+    </svg>
+  );
+}
+
+function CircularTimer({ cronometro, remainingMs, totalMs, accent, isRunning, onToggle }) {
   const radius = 78;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min(1, Math.max(0, 1 - remainingMs / totalMs));
@@ -12,7 +29,18 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent }) {
   const ringColor = isCritical ? '#ef4444' : accent;
 
   return (
-    <div className="h-full w-full bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center p-4">
+    <div className="relative h-full w-full bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center p-4">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-label={isRunning ? 'Pausar cronómetro' : 'Iniciar cronómetro'}
+        title={isRunning ? 'Pausar' : 'Iniciar'}
+        className="absolute top-3 right-3 z-10 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer transition-all duration-150 hover:opacity-90 active:scale-95 shadow-sm"
+        style={{ backgroundColor: accent }}
+      >
+        {isRunning ? <PauseIcon /> : <PlayIcon />}
+      </button>
+
       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 shrink-0">
         Cronómetro
       </p>
@@ -45,9 +73,13 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent }) {
           <div className="flex items-center gap-1.5 mt-2">
             <span
               className="w-1.5 h-1.5 rounded-full"
-              style={{ backgroundColor: isCritical ? '#ef4444' : accent }}
+              style={{
+                backgroundColor: isRunning ? '#22c55e' : isCritical ? '#ef4444' : '#9ca3af',
+              }}
             />
-            <span className="text-[10px] text-gray-400 font-medium tabular-nums">{pct}%</span>
+            <span className="text-[10px] text-gray-400 font-medium tabular-nums">
+              {isRunning ? `${pct}%` : remainingMs === 0 ? 'Fin' : remainingMs < totalMs ? 'Pausa' : 'Listo'}
+            </span>
           </div>
         </div>
       </div>
@@ -115,8 +147,28 @@ function LeaderCard({ leader, accent }) {
   );
 }
 
-export default function EnduranceView({ autos, cronometro, remainingMs, totalMs, leader, themeMode }) {
+export default function EnduranceView({
+  autos,
+  cronometro,
+  remainingMs,
+  totalMs,
+  leader,
+  themeMode,
+  isRunning,
+  onToggleRace,
+}) {
   const accent = THEMES[themeMode].accent;
+
+  const handleToggleRace = () => {
+    if (isRunning) {
+      sileo.warning({ title: 'Carrera pausada', description: `Tiempo restante: ${cronometro}` });
+    } else if (remainingMs === 0) {
+      sileo.success({ title: '¡Nueva carrera!', description: 'El cronómetro se ha reiniciado' });
+    } else {
+      sileo.success({ title: '¡Carrera iniciada!', description: 'Cronometrando 4 horas de resistencia' });
+    }
+    onToggleRace();
+  };
 
   return (
     <div className="h-full min-h-0 flex flex-col gap-3 overflow-hidden">
@@ -127,6 +179,8 @@ export default function EnduranceView({ autos, cronometro, remainingMs, totalMs,
           remainingMs={remainingMs}
           totalMs={totalMs}
           accent={accent}
+          isRunning={isRunning}
+            onToggle={handleToggleRace}
         />
         <LeaderCard leader={leader} accent={accent} />
         <CameraPanel accent={accent} />

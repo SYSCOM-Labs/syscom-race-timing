@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { THEMES } from '../theme.js';
+import { sileo } from 'sileo';
 
 const STORAGE_KEY = 'syscom_records_frenado';
 
@@ -70,7 +70,7 @@ function ParticipantCard({ auto, isSelected, accent, onClick }) {
   );
 }
 
-export default function BrakeTestPanel({ autos, themeMode }) {
+export default function BrakeTestPanel({ autos }) {
   const accent = '#ef4444';
 
   const [selectedId, setSelectedId] = useState('');
@@ -94,6 +94,7 @@ export default function BrakeTestPanel({ autos, themeMode }) {
     const updated = [newRecord, ...records];
     setRecords(updated);
     saveRecords(updated);
+    sileo.success({ title: 'Registro guardado', description: `${selectedAuto.matricula} — ${d.toFixed(2)}m` });
     setDistancia('');
     setSelectedId('');
   }, [selectedAuto, distancia, records]);
@@ -102,11 +103,22 @@ export default function BrakeTestPanel({ autos, themeMode }) {
     const updated = records.filter(r => r.id !== recordId);
     setRecords(updated);
     saveRecords(updated);
+    sileo.success({ title: 'Registro eliminado' });
   }, [records]);
 
   const clearAllRecords = useCallback(() => {
-    setRecords([]);
-    saveRecords([]);
+    sileo.action({
+      title: '¿Limpiar todo el historial?',
+      description: 'Esta acción no se puede deshacer',
+      button: {
+        title: 'Limpiar todo',
+        onClick: () => {
+          setRecords([]);
+          saveRecords([]);
+          sileo.success({ title: 'Historial limpiado' });
+        },
+      },
+    });
   }, []);
 
   const bestDist = records.length > 0 ? Math.min(...records.map(r => r.distanciaMetros)) : null;

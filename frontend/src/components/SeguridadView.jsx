@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { sileo } from 'sileo';
 import usePilots from '../hooks/usePilots.js';
 import useSeguridad from '../hooks/useSeguridad.js';
 import { THEMES } from '../theme.js';
@@ -107,7 +108,15 @@ function SeguridadModal({ pilot, status, onToggle, onClose }) {
             return (
               <button
                 key={key}
-                onClick={() => onToggle(pilot.id, key)}
+                onClick={() => {
+                  const wasChecked = items[key];
+                  onToggle(pilot.id, key);
+                  if (wasChecked) {
+                    sileo.info({ title: `${label} desmarcado`, description: pilot.piloto });
+                  } else {
+                    sileo.success({ title: `${label} verificado`, description: pilot.piloto });
+                  }
+                }}
                 className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 ${
                   checked ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-white hover:bg-gray-50'
                 }`}

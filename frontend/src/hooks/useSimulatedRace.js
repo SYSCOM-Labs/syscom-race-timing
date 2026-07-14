@@ -27,15 +27,33 @@ export const RACE_TOTAL_MS = 4 * 60 * 60 * 1000;
 export default function useSimulatedRace() {
   const [autos, setAutos] = useState(INITIAL_AUTOS);
   const [remainingMs, setRemainingMs] = useState(RACE_TOTAL_MS);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const toggleRace = useCallback(() => {
+    if (isRunning) {
+      setIsRunning(false);
+      return;
+    }
+    if (remainingMs === 0) setRemainingMs(RACE_TOTAL_MS);
+    setIsRunning(true);
+  }, [isRunning, remainingMs]);
 
   useEffect(() => {
+    if (!isRunning) return undefined;
+
     const timer = setInterval(() => {
       setRemainingMs(prev => Math.max(0, prev - 1000));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isRunning]);
 
   useEffect(() => {
+    if (isRunning && remainingMs === 0) setIsRunning(false);
+  }, [isRunning, remainingMs]);
+
+  useEffect(() => {
+    if (!isRunning) return undefined;
+
     /*
      * SIMULACIÓN DE EVENTOS EN TIEMPO REAL
      * ======================================
@@ -91,7 +109,7 @@ export default function useSimulatedRace() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isRunning]);
 
   const sortedByLaps = useCallback(() => {
     return [...autos].sort((a, b) => b.vueltas - a.vueltas || parseTimeToMs(a.mejorVuelta) - parseTimeToMs(b.mejorVuelta));
@@ -113,5 +131,7 @@ export default function useSimulatedRace() {
     totalActive,
     remainingMs,
     totalMs: RACE_TOTAL_MS,
+    isRunning,
+    toggleRace,
   };
 }
