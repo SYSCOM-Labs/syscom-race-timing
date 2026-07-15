@@ -22,8 +22,8 @@ function parseTimeToMs(timeStr) {
   return parseInt(m, 10) * 60000 + parseInt(s, 10) * 1000 + parseInt(ms, 10) * 10;
 }
 
-// ⏱️ CAMBIO ESTRATÉGICO PARA PRUEBAS: Configurado a 40 segundos en lugar de 4 horas
-export const RACE_TOTAL_MS = 40 * 1000; 
+// ⏱️ CAMBIO ESTRATÉGICO PARA PRUEBAS: Configurado a 30 segundos en lugar de 4 horas
+export const RACE_TOTAL_MS = 30 * 1000; 
 
 export default function useSimulatedRace() {
   const [autos, setAutos] = useState(INITIAL_AUTOS);
@@ -31,32 +31,49 @@ export default function useSimulatedRace() {
   const [isRunning, setIsRunning] = useState(false);
   const [cameraDetections, setCameraDetections] = useState([]);
   const autosRef = useRef(autos);
+  // Reloj por timestamp: evita la latencia de esperar el primer tick de setInterval
+  const endAtRef = useRef(null);
+  const remainingAtPauseRef = useRef(RACE_TOTAL_MS);
 
   useEffect(() => { autosRef.current = autos; }, [autos]);
 
   const toggleRace = useCallback(() => {
     if (isRunning) {
+      const remaining = endAtRef.current != null
+        ? Math.max(0, endAtRef.current - Date.now())
+        : remainingAtPauseRef.current;
+      remainingAtPauseRef.current = remaining;
+      endAtRef.current = null;
+      setRemainingMs(remaining);
       setIsRunning(false);
       return;
     }
-    if (remainingMs === 0) setRemainingMs(RACE_TOTAL_MS);
-    setIsRunning(true);
-  }, [isRunning, remainingMs]);
 
-  // Hilo del Reloj (Countdown cada 1 segundo)
+    const base = remainingAtPauseRef.current === 0 ? RACE_TOTAL_MS : remainingAtPauseRef.current;
+    remainingAtPauseRef.current = base;
+    endAtRef.current = Date.now() + base;
+    setRemainingMs(base);
+    setIsRunning(true);
+  }, [isRunning]);
+
+  // Countdown anclado a Date.now() — respuesta inmediata al iniciar/pausar
   useEffect(() => {
     if (!isRunning) return undefined;
 
-    const timer = setInterval(() => {
-      setRemainingMs(prev => Math.max(0, prev - 1000));
-    }, 1000);
+    const tick = () => {
+      const remaining = Math.max(0, (endAtRef.current ?? Date.now()) - Date.now());
+      setRemainingMs(remaining);
+      if (remaining === 0) {
+        remainingAtPauseRef.current = 0;
+        endAtRef.current = null;
+        setIsRunning(false);
+      }
+    };
+
+    tick();
+    const timer = setInterval(tick, 100);
     return () => clearInterval(timer);
   }, [isRunning]);
-
-  // Manejo Automático de Fin de Sesión
-  useEffect(() => {
-    if (isRunning && remainingMs === 0) setIsRunning(false);
-  }, [isRunning, remainingMs]);
 
   // Loop de Simulación por Evento RFID / Radar Doppler
   useEffect(() => {

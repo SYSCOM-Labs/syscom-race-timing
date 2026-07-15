@@ -41,9 +41,9 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent, isRunning, on
         {isRunning ? <PauseIcon /> : <PlayIcon />}
       </button>
 
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 shrink-0">
+      {/* <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 shrink-0">
         Cronómetro
-      </p>
+      </p> */}
 
       <div className="relative w-full max-w-[210px] aspect-square">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 200 200">
@@ -58,7 +58,7 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent, isRunning, on
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={dashoffset}
-            className="transition-all duration-1000 ease-linear"
+            className={isRunning ? 'transition-[stroke-dashoffset] duration-100 ease-linear' : ''}
           />
         </svg>
 
