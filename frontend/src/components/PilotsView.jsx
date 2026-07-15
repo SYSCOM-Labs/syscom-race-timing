@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { sileo } from 'sileo';
 import {
   Zap, Flame, Sun, Trophy, Shield, Crosshair, Rocket, Wind, Star, Gem, Mountain, Waves,
   Car, Bike, Ship, Plane, RocketIcon, Siren, Radar, Navigation, Compass, LocateFixed,
@@ -427,8 +428,31 @@ export default function PilotsView({ themeMode }) {
   const [showForm, setShowForm] = useState(false);
 
   const handleSave = (data) => {
-    if (editingPilot) update(editingPilot.id, data);
-    else create(data);
+    if (editingPilot) {
+      sileo.promise(
+        new Promise((resolve) => {
+          update(editingPilot.id, data);
+          resolve(data);
+        }),
+        {
+          loading: { title: 'Actualizando piloto...' },
+          success: () => ({ title: 'Piloto actualizado', description: `${data.piloto} modificado exitosamente` }),
+          error: () => ({ title: 'Error al actualizar piloto' }),
+        }
+      );
+    } else {
+      sileo.promise(
+        new Promise((resolve) => {
+          const created = create(data);
+          resolve(created);
+        }),
+        {
+          loading: { title: 'Registrando piloto...' },
+          success: (p) => ({ title: 'Piloto registrado', description: `${p.piloto} agregado exitosamente` }),
+          error: () => ({ title: 'Error al registrar piloto' }),
+        }
+      );
+    }
     setShowForm(false);
     setEditingPilot(null);
   };
@@ -469,7 +493,17 @@ export default function PilotsView({ themeMode }) {
                 onEdit={(p) => { setEditingPilot(p); setShowForm(true); }}
                 onDelete={(id) => {
                   const p = pilots.find(x => x.id === id);
-                  if (window.confirm(`¿Eliminar a ${p?.piloto || 'este piloto'}?`)) remove(id);
+                  sileo.action({
+                    title: `¿Eliminar a ${p?.piloto || 'este piloto'}?`,
+                    description: 'Esta acción no se puede deshacer',
+                    button: {
+                      title: 'Eliminar',
+                      onClick: () => {
+                        remove(id);
+                        sileo.success({ title: 'Piloto eliminado', description: `${p?.piloto || 'Piloto'} ha sido eliminado` });
+                      },
+                    },
+                  });
                 }}
               />
             ))}

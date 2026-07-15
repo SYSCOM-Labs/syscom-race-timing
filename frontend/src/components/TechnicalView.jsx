@@ -36,7 +36,6 @@ const TABS = [
 export default function TechnicalView({ autos, themeMode }) {
   const [activeTab, setActiveTab] = useState('speed');
   const accent = THEMES[themeMode].accent;
-  const activeTabData = TABS.find(t => t.id === activeTab);
 
   return (
     <div className="h-full flex flex-col gap-4">
@@ -88,7 +87,7 @@ export default function TechnicalView({ autos, themeMode }) {
         {activeTab === 'speed' ? (
           <SpeedTestPanel autos={autos} themeMode={themeMode} />
         ) : (
-          <BrakeTestPanel autos={autos} themeMode={themeMode} />
+          <BrakeTestPanel autos={autos} />
         )}
       </div>
     </div>

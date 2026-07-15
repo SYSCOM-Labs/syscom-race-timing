@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { Toaster } from 'sileo';
 import useSimulatedRace from './hooks/useSimulatedRace.js';
 import Sidebar from './components/Sidebar.jsx';
 import EnduranceView from './components/EnduranceView.jsx';
@@ -16,10 +17,23 @@ export default function App() {
     setThemeMode(prev => prev === 'race' ? 'syscom' : 'race');
   }, []);
 
-  const { autos, cronometro, leader, remainingMs, totalMs } = useSimulatedRace();
+  const { autos, cronometro, leader, remainingMs, totalMs, isRunning, toggleRace, cameraDetections } = useSimulatedRace();
 
   return (
     <div className="h-svh bg-sidebar-bg flex overflow-hidden">
+      <Toaster
+        position="top-right"
+        options={{
+          fill: '#171717',
+          roundness: 16,
+          styles: {
+            title: 'text-white!',
+            description: 'text-white/75!',
+            badge: 'bg-white/10!',
+            button: 'bg-white/10! hover:bg-white/15! text-white!',
+          },
+        }}
+      />
       <Sidebar
         currentView={currentView}
         setCurrentView={setCurrentView}
@@ -50,7 +64,10 @@ export default function App() {
               leader={leader}
               remainingMs={remainingMs}
               totalMs={totalMs}
+              isRunning={isRunning}
+              onToggleRace={toggleRace}
               themeMode={themeMode}
+              cameraDetections={cameraDetections}
             />
           ) : (
             <TechnicalView

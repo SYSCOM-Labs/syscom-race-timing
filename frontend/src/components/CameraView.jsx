@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { sileo } from 'sileo';
 import { THEMES } from '../theme.js';
 import useCameraConfig from '../hooks/useCameraConfig.js';
 import CameraPanel from './CameraPanel.jsx';
@@ -7,6 +8,16 @@ export default function CameraView({ themeMode }) {
   const accent = THEMES[themeMode].accent;
   const { config, updateConfig, isConfigured } = useCameraConfig();
   const [showPassword, setShowPassword] = useState(false);
+  const wasConfiguredRef = useRef(isConfigured);
+
+  useEffect(() => {
+    if (isConfigured && !wasConfiguredRef.current) {
+      wasConfiguredRef.current = true;
+      sileo.success({ title: 'Configuración guardada', description: 'Cámara configurada correctamente' });
+    } else if (!isConfigured) {
+      wasConfiguredRef.current = false;
+    }
+  }, [isConfigured]);
 
   return (
     <div className="h-full flex flex-col gap-4">
