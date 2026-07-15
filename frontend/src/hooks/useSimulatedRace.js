@@ -19,10 +19,11 @@ function generateRandomTime(baseMinutes = 1, baseSeconds = 20) {
 function parseTimeToMs(timeStr) {
   const [minSec, ms] = timeStr.split('.');
   const [m, s] = minSec.split(':');
-  return parseInt(m) * 60000 + parseInt(s) * 1000 + parseInt(ms) * 10;
+  return parseInt(m, 10) * 60000 + parseInt(s, 10) * 1000 + parseInt(ms, 10) * 10;
 }
 
-export const RACE_TOTAL_MS = 4 * 60 * 60 * 1000;
+// ⏱️ CAMBIO ESTRATÉGICO PARA PRUEBAS: Configurado a 40 segundos en lugar de 4 horas
+export const RACE_TOTAL_MS = 40 * 1000; 
 
 export default function useSimulatedRace() {
   const [autos, setAutos] = useState(INITIAL_AUTOS);
@@ -42,6 +43,7 @@ export default function useSimulatedRace() {
     setIsRunning(true);
   }, [isRunning, remainingMs]);
 
+  // Hilo del Reloj (Countdown cada 1 segundo)
   useEffect(() => {
     if (!isRunning) return undefined;
 
@@ -51,97 +53,88 @@ export default function useSimulatedRace() {
     return () => clearInterval(timer);
   }, [isRunning]);
 
+  // Manejo Automático de Fin de Sesión
   useEffect(() => {
     if (isRunning && remainingMs === 0) setIsRunning(false);
   }, [isRunning, remainingMs]);
 
+  // Loop de Simulación por Evento RFID / Radar Doppler
   useEffect(() => {
     if (!isRunning) return undefined;
-
-    /*
-     * SIMULACIÓN DE EVENTOS EN TIEMPO REAL
-     * ======================================
-     * En producción, aquí se conectaría el WebSocket real:
-     *
-     *   const ws = new WebSocket('ws://localhost:8000/ws');
-     *   ws.onmessage = (event) => {
-     *     const data = JSON.parse(event.data);
-     *     if (data.type === 'UPDATE_LEADERBOARD') {
-     *       setAutos(data.payload);
-     *     } else if (data.type === 'NEW_LAP') {
-     *       setAutos(prev => prev.map(auto =>
-     *         auto.id === data.autoId
-     *           ? { ...auto, vueltas: auto.vueltas + 1, ultimaVuelta: data.tiempo }
-     *           : auto
-     *       ));
-     *     }
-     *   };
-     *   return () => ws.close();
-     */
 
     const interval = setInterval(() => {
       const randomId = String(Math.floor(Math.random() * 6) + 1).padStart(2, '0');
       const incrementLap = Math.random() < 0.3;
 
       const currentAutos = autosRef.current;
-      const detectedAuto = currentAutos.find(a => a.id === randomId);
+      const targetAuto = currentAutos.find(a => a.id === randomId);
+      if (!targetAuto) return;
 
+      // Generamos los nuevos deltas técnicos del evento
+      const newLapTime = generateRandomTime();
+      const newLapMs = parseTimeToMs(newLapTime);
+      
+      const speedDelta = (Math.random() - 0.5) * 4;
+      const nextSpeed = Math.round(Math.max(30, Math.min(60, targetAuto.velocidadMaxima + speedDelta)) * 10) / 10;
+
+      const brakeDelta = (Math.random() - 0.5) * 0.6;
+      const nextBrake = Math.round(Math.max(2.5, Math.min(5.5, targetAuto.frenadoMetros + brakeDelta)) * 100) / 100;
+
+      const statuses = ['active', 'active', 'active', 'pit', 'active', 'pit-stop'];
+      const nextStatus = Math.random() < 0.1 
+        ? statuses[Math.floor(Math.random() * statuses.length)] 
+        : targetAuto.status;
+
+      const nextLaps = incrementLap ? targetAuto.vueltas + 1 : targetAuto.vueltas;
+      const nextBestVuelta = (incrementLap && newLapMs < parseTimeToMs(targetAuto.mejorVuelta))
+        ? newLapTime
+        : targetAuto.mejorVuelta;
+
+      // 💥 ARQUITECTURA ATÓMICA: Actualizamos la base de autos
       setAutos(prev => prev.map(auto => {
         if (auto.id !== randomId) return auto;
-
-        const newLapTime = generateRandomTime();
-        const newLapMs = parseTimeToMs(newLapTime);
-        let updated = { ...auto, ultimaVuelta: newLapTime };
-
-        if (incrementLap) {
-          updated.vueltas = auto.vueltas + 1;
-          if (newLapMs < parseTimeToMs(auto.mejorVuelta)) {
-            updated.mejorVuelta = newLapTime;
-          }
-        }
-
-        const speedDelta = (Math.random() - 0.5) * 4;
-        updated.velocidadMaxima = Math.round(Math.max(30, Math.min(60, auto.velocidadMaxima + speedDelta)) * 10) / 10;
-
-        const brakeDelta = (Math.random() - 0.5) * 0.6;
-        updated.frenadoMetros = Math.round(Math.max(2.5, Math.min(5.5, auto.frenadoMetros + brakeDelta)) * 100) / 100;
-
-        const statuses = ['active', 'active', 'active', 'pit', 'active', 'pit-stop'];
-        if (Math.random() < 0.1) {
-          updated.status = statuses[Math.floor(Math.random() * statuses.length)];
-        }
-
-        return updated;
+        return {
+          ...auto,
+          vueltas: nextLaps,
+          ultimaVuelta: newLapTime,
+          mejorVuelta: nextBestVuelta,
+          velocidadMaxima: nextSpeed,
+          frenadoMetros: nextBrake,
+          status: nextStatus
+        };
       }));
 
-      if (detectedAuto) {
-        setCameraDetections(prev => {
-          const detection = {
-            id: Date.now().toString(),
-            matricula: detectedAuto.matricula,
-            vuelta: detectedAuto.vueltas + (incrementLap ? 1 : 0),
-            tiempoVuelta: detectedAuto.ultimaVuelta || '00:00.00',
-            velocidad: detectedAuto.velocidadMaxima || 0,
-          };
-          const updated = [detection, ...prev];
-          return updated.slice(0, 3);
-        });
-      }
-    }, 3000);
+      // 🔥 HIDRATACIÓN DE TELEMETRÍA: Datos frescos y sincronizados al instante
+      setCameraDetections(prev => {
+        const detection = {
+          id: `${Date.now()}-${randomId}`,
+          matricula: targetAuto.matricula,
+          vuelta: nextLaps,
+          tiempoVuelta: newLapTime,
+          velocidad: nextSpeed,
+        };
+        return [detection, ...prev].slice(0, 3);
+      });
+
+    }, 3000); // Frecuencia de ráfagas: 3 segundos
 
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  const sortedByLaps = useCallback(() => {
-    return [...autos].sort((a, b) => b.vueltas - a.vueltas || parseTimeToMs(a.mejorVuelta) - parseTimeToMs(b.mejorVuelta));
-  }, [autos]);
+  // Función de ordenación optimizada: Mantiene la lógica del desempate del circuito
+  const sortedAutos = [...autos].sort((a, b) => {
+    if (b.vueltas !== a.vueltas) {
+      return b.vueltas - a.vueltas; // Gana el que tenga más vueltas acumuladas
+    }
+    // Si tienen las mismas vueltas, se desempata por la vuelta más rápida registrada en ms
+    return parseTimeToMs(a.mejorVuelta) - parseTimeToMs(b.mejorVuelta);
+  });
 
   const hours = Math.floor(remainingMs / 3600000);
   const minutes = Math.floor((remainingMs % 3600000) / 60000);
   const seconds = Math.floor((remainingMs % 60000) / 1000);
   const cronometro = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
-  const sortedAutos = sortedByLaps();
   const leader = sortedAutos[0] || null;
   const totalActive = autos.filter(a => a.status === 'active').length;
 

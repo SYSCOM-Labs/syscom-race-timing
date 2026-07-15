@@ -47,7 +47,7 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent, isRunning, on
 
       <div className="relative w-full max-w-[210px] aspect-square">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 200 200">
-          <circle cx="100" cy="100" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="9" />
+          <circle cx="100" cy="100" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="12" />
           <circle
             cx="100"
             cy="100"
@@ -70,7 +70,7 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent, isRunning, on
           >
             {cronometro}
           </span>
-          <div className="flex items-center gap-1.5 mt-2">
+          {/* <div className="flex items-center gap-1.5 mt-2">
             <span
               className="w-1.5 h-1.5 rounded-full"
               style={{
@@ -80,7 +80,7 @@ function CircularTimer({ cronometro, remainingMs, totalMs, accent, isRunning, on
             <span className="text-[10px] text-gray-400 font-medium tabular-nums">
               {isRunning ? `${pct}%` : remainingMs === 0 ? 'Fin' : remainingMs < totalMs ? 'Pausa' : 'Listo'}
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
